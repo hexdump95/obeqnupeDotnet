@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Obeqnupe.Data;
+using Obeqnupe.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString)
 );
 // Add services to the container.
+builder.Services.AddScoped<IBenefitRepository, BenefitRepository>();
+builder.Services.AddScoped<ICompanyTypeRepository, CompanyTypeRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
