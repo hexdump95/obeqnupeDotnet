@@ -1,8 +1,136 @@
-﻿@{
+﻿@model FilterDataViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div id="spinner"
+     class="d-none justify-content-center align-items-center position-fixed top-0 left-0 w-100 h-100 z-3">
+    <div class="spinner-border text-info" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h1>obeqnupe</h1>
+
+    <form class="border border-1 rounded-1 p-4" id="filter-form">
+
+        <div class="accordion accordion-flush" id="accordionFlushSkills">
+            <div class="accordion-item border border-1 rounded-1">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed rounded-1" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false"
+                            aria-controls="flush-collapseOne">
+                        Skills
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushSkills">
+                    <div class="accordion-body">
+
+                        @foreach (var skill in Model.Skills)
+                        {
+                            <div class="badge text-bg-dark badge-button"
+                                 onclick="addSkill(this, @skill.Id)">@skill.Name</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="accordion accordion-flush accordion-border" id="accordionFlushBenefits">
+            <div class="accordion-item border border-1 rounded-1">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed rounded-1" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                            aria-controls="flush-collapseTwo">
+                        Benefits
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushBenefits">
+                    <div class="accordion-body">
+                        @foreach (var benefit in Model.Benefits)
+                        {
+                            <div class="badge text-bg-dark badge-button"
+                                 onclick="addBenefit(this, @benefit.Id)">@benefit.Name
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="form-floating">
+            <select class="form-select" id="company-type">
+                <option value=""></option>
+                @foreach (var companyType in Model.CompanyTypes)
+                {
+                    <option value="@companyType.Id">@companyType.Name</option>
+                }
+            </select>
+            <label for="company-type">Type</label>
+        </div>
+        <br>
+        <div class="form-floating">
+            <select class="form-select" id="location">
+                <option value=""></option>
+                @foreach (var location in Model.Locations)
+                {
+                    <option value="@location.Id">@location.Name</option>
+                }
+            </select>
+            <label for="location">Location</label>
+        </div>
+        <br>
+        <div hidden class="input-group form-floating">
+            <input id="query" class="form-control" value="" oninput="search(value)">
+            <label for="query">Name</label>
+        </div>
+        <div id="result-search"></div>
+        <button class="btn btn-primary" type="submit">Show results</button>
+    </form>
+
+    <table id="table" class="table table-hover mx-auto w-100 table-layout-fixed">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Location</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody id="companies">
+        </tbody>
+    </table>
+
+    <div class="modal" id="my-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span id="company-name"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="company-detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav id="pagination">
+        <p class="text-center" id="page-info">Page 1</p>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" id="prev-page">
+                <a class="page-link" href="#" onclick="previousPage(); return false" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" aria-current="page" id="current-page">1</a>
+            </li>
+            <li class="page-item" id="next-page">
+                <a class="page-link" href="#" onclick="nextPage(); return false;">Next</a>
+            </li>
+        </ul>
+    </nav>
 </div>
