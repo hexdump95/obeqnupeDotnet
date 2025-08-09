@@ -7,4 +7,5 @@ public interface ICompanyService
 {
     Task<FilterDataViewModel> GetFilterData();
     Task<PageDto<CompanyResponse>> FindAll(FilterRequest filter, int page);
+    Task<CompanyDetailResponse> FindOne(Guid id);
 }

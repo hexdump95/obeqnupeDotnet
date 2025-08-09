@@ -19,9 +19,14 @@ public class CompanyRepository : ICompanyRepository
         throw new NotImplementedException();
     }
 
-    public Task<Company?> FindByIdAsync(Guid id)
+    public async Task<Company?> FindByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.Companies
+            .Include(c => c.Location)
+            .Include(c => c.CompanyType)
+            .Include(c => c.Benefits)
+            .Include(c => c.Skills)
+            .Where(c => c.Id == id).FirstOrDefaultAsync();
     }
 
     public IQueryable<Company> GetQueryable()

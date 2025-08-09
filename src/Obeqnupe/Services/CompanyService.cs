@@ -134,4 +134,22 @@ public class CompanyService : ICompanyService
         };
         return response;
     }
+
+    public async Task<CompanyDetailResponse> FindOne(Guid id)
+    {
+        var company = await _companyRepository.FindByIdAsync(id);
+        if (company == null)
+        {
+            throw new Exception("Company not found"); // TODO: change this!
+        }
+
+        return new()
+        {
+            Name = company.Name,
+            Page = company.Page,
+            LocationName = company.Location!.Name,
+            Skills = company.Skills.Select(s => s.Name).ToList(),
+            Benefits = company.Benefits.Select(s => s.Name).ToList(),
+        };
+    }
 }
